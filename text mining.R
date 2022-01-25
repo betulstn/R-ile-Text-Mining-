@@ -1,15 +1,15 @@
-#Tüm paketlerin yüklenmesi
-install.packages("twitteR") #Twitter veri cekme için kullanılır.
+#TÃ¼m paketlerin yÃ¼klenmesi
+install.packages("twitteR") #Twitter veri cekme iÃ§in kullanÃ½lÃ½r.
 install.packages("ROAuth") #Twitter'da ki uygulamaya giris yapmak ve iletisim kurmak icin kullanilirr.
 install.packages("openssl") #imzalar ve sertifakalar icin arac seti
 install.packages("httpuv") #HTTP ve WebSocket Sunucu Kitapligi
-install.packages("tm") #veri madenciliÄŸi iÃ§in kullanÄ±lÄ±r.
+install.packages("tm") #veri madenciliÃ„Å¸i iÃƒÂ§in kullanÃ„Â±lÃ„Â±r.
 install.packages("readxl") #ecxel dosyalarini okur
 install.packages("tidytext")
-install.packages("wordcloud") #kelime bulutu oluşturmada kullanılır. 
-install.packages("ggplot2") #olusturacagimiz grafiklerini görüntülemek icin kullaniriz.
-install.packages("stringr") #String verilere yani metinsel verilere manipülasyon icin kullanilir.
-install.packages("writexl") #verileri excel formatına aktarmak icin kullanılır. 
+install.packages("wordcloud") #kelime bulutu oluÃ¾turmada kullanÃ½lÃ½r. 
+install.packages("ggplot2") #olusturacagimiz grafiklerini gÃ¶rÃ¼ntÃ¼lemek icin kullaniriz.
+install.packages("stringr") #String verilere yani metinsel verilere manipÃ¼lasyon icin kullanilir.
+install.packages("writexl") #verileri excel formatÃ½na aktarmak icin kullanÃ½lÃ½r. 
 
 library(twitteR)
 library(ROAuth)
@@ -29,10 +29,10 @@ library(writexl)
 options(httr_oauth_cache=T)
 
 
-api_key <- "S140N9Qq5vY1MGCZaYdEu0r01" 
-api_key_secret <- "hcHP3zZwozqS5hPp7PKidU32S3ssS6NGJmTH5A0wjYCGKV0Gz7"
-access_token <- "4753092995-eWCKRFDNWLVXSZEoPz7T7zOHABTNUuJARouKOKw"
-access_token_secret <- "C7x4kNGo8tUvUefyMZXVzePQwiJRVh3cgjGmryYDy2H0s"
+api_key <- ---------------------------
+api_key_secret <- --------------------------------
+access_token <- ---------------------------------------
+access_token_secret <- ---------------------------------
 
 
 setup_twitter_oauth(api_key,api_key_secret,access_token,access_token_secret)  
@@ -115,16 +115,16 @@ library("writexl")
 
 write_xlsx(tweet_clean, "D:/Veriler/temizveri_13 ocak.xlsx")
 
-#21 günlük birleştirilmiş olan veri setinin içeriye aktarılması "temizveri.csv" dosyası
+#21 gÃ¼nlÃ¼k birleÃ¾tirilmiÃ¾ olan veri setinin iÃ§eriye aktarÃ½lmasÃ½ "temizveri.csv" dosyasÃ½
 temizveri =read.table(file.choose(), header = T, sep = ";")
 
-#21 gÜnlük verilerden etkisiz kelimelerin çıkartılması
+#21 gÃœnlÃ¼k verilerden etkisiz kelimelerin Ã§Ã½kartÃ½lmasÃ½
 temiz_twit <- temizveri %>% select(text) %>% 
   mutate(linenumber = row_number()) %>% unnest_tokens(word, text)
 temiz_twit <- temiz_twit %>% anti_join(Turkish_Stopwords, by=c("word"="STOPWORD"))
 head(temiz_twit)
 
-#Twitlerde toplamda 250'den daha fazla kullanılan kelimelerin listelenmesi
+#Twitlerde toplamda 250'den daha fazla kullanÃ½lan kelimelerin listelenmesi
 temiz_twit %>%
   count(word, sort = TRUE) %>%
   filter(n > 250) %>%
@@ -133,7 +133,7 @@ temiz_twit %>%
   geom_col() +
   xlab(NULL) +
   coord_flip() + theme_minimal() +
-  ggtitle("Tweetlerde en çok kullanılan kelimeler")
+  ggtitle("Tweetlerde en Ã§ok kullanÃ½lan kelimeler")
 
 #Kelime bulutu
 temiz_twit %>% 
