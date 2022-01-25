@@ -1,4 +1,4 @@
-#Paketlerin Yüklenmesi
+#Paketlerin YÃ¼klenmesi
 install.packages("twitteR")
 install.packages("ROAuth")
 install.packages("ROAuth")
@@ -50,47 +50,47 @@ library(widyr)
 
 options(httr_oauth_cache=T)
 
-api_key <- "S140N9Qq5vY1MGCZaYdEu0r01" 
-api_key_secret <- "hcHP3zZwozqS5hPp7PKidU32S3ssS6NGJmTH5A0wjYCGKV0Gz7"
-access_token <- "4753092995-eWCKRFDNWLVXSZEoPz7T7zOHABTNUuJARouKOKw"
-access_token_secret <- "C7x4kNGo8tUvUefyMZXVzePQwiJRVh3cgjGmryYDy2H0s"
+api_key <--------------------------
+api_key_secret <- ------------------------
+access_token <- -----------------------------
+access_token_secret <- ------------------------
 
 
 setup_twitter_oauth(api_key,api_key_secret,access_token,access_token_secret)  
-# "#kitap" etiketiyle atılmış 10000 twitin çekilmesi
+# "#kitap" etiketiyle atÃ½lmÃ½Ã¾ 10000 twitin Ã§ekilmesi
 tweets <- searchTwitteR("#kitap", n=10000,  locale = "tr_TR")
 
 n.tweet <- length(tweets)
 
-# tweetleri veri çerçevesine dönüştürme
+# tweetleri veri Ã§erÃ§evesine dÃ¶nÃ¼Ã¾tÃ¼rme
 tweets.df <- twListToDF(tweets)
 
 tweets.txt <- sapply(tweets, function(t)t$getText())
-# Giriş hatalarını önlemek için grafiksel Parametreleri yoksayma
+# GiriÃ¾ hatalarÃ½nÃ½ Ã¶nlemek iÃ§in grafiksel Parametreleri yoksayma
 tweets.txt <- str_replace_all(tweets.txt,"[^[:graph:]]", " ")
 
-#ön işleme metni:
+#Ã¶n iÃ¾leme metni:
 clean.text = function(x)
 {
-  # küçük harfe dönüştürme
+  # kÃ¼Ã§Ã¼k harfe dÃ¶nÃ¼Ã¾tÃ¼rme
   x = tolower(x)
-  # rt ifadelerinin kaldırılması
+  # rt ifadelerinin kaldÃ½rÃ½lmasÃ½
   x = gsub("rt", "", x)
-  # @ işaretlerinin kaldırılması
+  # @ iÃ¾aretlerinin kaldÃ½rÃ½lmasÃ½
   x = gsub("@\\w+", "", x)
-  # noktalama işaretlerinin kaldırılması
+  # noktalama iÃ¾aretlerinin kaldÃ½rÃ½lmasÃ½
   x = gsub("[[:punct:]]", "", x)
-  # sayıların kaldırılması
+  # sayÃ½larÃ½n kaldÃ½rÃ½lmasÃ½
   x = gsub("[[:digit:]]", "", x)
-  # link uzantılarının kaldırılması
+  # link uzantÃ½larÃ½nÃ½n kaldÃ½rÃ½lmasÃ½
   x = gsub("http\\w+", "", x)
-  # sekmelerin kaldırılması
+  # sekmelerin kaldÃ½rÃ½lmasÃ½
   x = gsub("[ |\t]{2,}", "", x)
-  # baştaki boşlukların kaldırılması
+  # baÃ¾taki boÃ¾luklarÃ½n kaldÃ½rÃ½lmasÃ½
   x = gsub("^ ", "", x)
-  # baştaki boşlukların kaldırılması
+  # baÃ¾taki boÃ¾luklarÃ½n kaldÃ½rÃ½lmasÃ½
   x = gsub(" $", "", x)
-  # diğer gereksiz öğelerin kaldırılması
+  # diÃ°er gereksiz Ã¶Ã°elerin kaldÃ½rÃ½lmasÃ½
   x = gsub('https://','',x)
   x = gsub('http://','',x)
   x = gsub('[^[:graph:]]', ' ',x)
@@ -102,25 +102,25 @@ clean.text = function(x)
 }
 
 cleanText <- clean.text(tweets.txt)
-# boş sonuçları kaldır (varsa)
+# boÃ¾ sonuÃ§larÃ½ kaldÃ½r (varsa)
 idx <- which(cleanText == " ")
 cleanText <- cleanText[cleanText != " "]
 
 tweets.df %<>% 
   mutate(
     created = created %>% 
-      # Sıfırları kaldırın.
+      # SÃ½fÃ½rlarÃ½ kaldÃ½rÃ½n.
       str_remove_all(pattern = '\\+0000') %>%
-      #Ayrıştırma tarihi..
+      #AyrÃ½Ã¾tÃ½rma tarihi..
       parse_date_time(orders = '%y-%m-%d %H%M%S')
   )
 
 tweets.df %<>% 
   mutate(Created_At_Round = created%>% round(units = 'hours') %>% as.POSIXct())
-#En önce ve en son atılan twitlerin gösterilmesi
+#En Ã¶nce ve en son atÃ½lan twitlerin gÃ¶sterilmesi
 tweets.df %>% pull(created) %>% min()
 tweets.df %>% pull(created) %>% max()
-#Atılan twitlerin saatlere göre sayısınının grafik halinde gösterilmesi
+#AtÃ½lan twitlerin saatlere gÃ¶re sayÃ½sÃ½nÃ½nÃ½n grafik halinde gÃ¶sterilmesi
 plt <- tweets.df %>% 
   dplyr::count(Created_At_Round) %>% 
   ggplot(mapping = aes(x = Created_At_Round, y = n)) +
@@ -128,31 +128,31 @@ plt <- tweets.df %>%
   geom_line() +
   xlab(label = 'Tarih') +
   ylab(label = NULL) +
-  ggtitle(label = 'Saat Başına Tweet Sayısı')
+  ggtitle(label = 'Saat BaÃ¾Ã½na Tweet SayÃ½sÃ½')
 
 plt %>% ggplotly()
         
-#pozitif ve negatif kelimelerin içe aktarılması
+#pozitif ve negatif kelimelerin iÃ§e aktarÃ½lmasÃ½
 positive <- read_csv("positive-words.csv")
 negative <- read_csv("negative-words.csv")
 
-# pozitif ve negatif kelimelere ekleme yapılması
-pos.words = c(positive,'güzel','iyi','mükemmel','beğendim','olmuş','özgün','doğru','etkin','hatasız','etkiliyeci','büyüleyici','sürükleyici','tatlı','sevimli','heycanlı')
+# pozitif ve negatif kelimelere ekleme yapÃ½lmasÃ½
+pos.words = c(positive,'gÃ¼zel','iyi','mÃ¼kemmel','beÃ°endim','olmuÃ¾','Ã¶zgÃ¼n','doÃ°ru','etkin','hatasÃ½z','etkiliyeci','bÃ¼yÃ¼leyici','sÃ¼rÃ¼kleyici','tatlÃ½','sevimli','heycanlÃ½')
 
-neg.words = c(negative,'Bearish','berbat', 'yanlış' ,'az', 'beğenmedim' ,'sat' ,'alçak', 'destek', 'güvensiz' ,'olumsuz' ,
-              'alınmaz' ,"düştü",'zarar','beğenmedim','kötü','iyi değil','delist','olmaz','sabırsız','yapmaz','düşüş','pahalı','uzun','sıkıcı'
+neg.words = c(negative,'Bearish','berbat', 'yanlÃ½Ã¾' ,'az', 'beÃ°enmedim' ,'sat' ,'alÃ§ak', 'destek', 'gÃ¼vensiz' ,'olumsuz' ,
+              'alÃ½nmaz' ,"dÃ¼Ã¾tÃ¼",'zarar','beÃ°enmedim','kÃ¶tÃ¼','iyi deÃ°il','delist','olmaz','sabÃ½rsÃ½z','yapmaz','dÃ¼Ã¾Ã¼Ã¾','pahalÃ½','uzun','sÃ½kÃ½cÃ½'
               ,'dondu')
 score.sentiment = function(sentences, pos.words, neg.words, .progress='none')
 {
   require(plyr)
   require(stringr)
   
-  # Cümle vektörlerini girdi olarak veriyoruz.
-  # plyr bir listeyi veya vektörü bizim için "l" olarak işleyecek
-  # basit bir puan dizisini geri istiyoruz, bu yüzden "l" + "a" + "ply" = laply kullanıyoruz:
+  # CÃ¼mle vektÃ¶rlerini girdi olarak veriyoruz.
+  # plyr bir listeyi veya vektÃ¶rÃ¼ bizim iÃ§in "l" olarak iÃ¾leyecek
+  # basit bir puan dizisini geri istiyoruz, bu yÃ¼zden "l" + "a" + "ply" = laply kullanÃ½yoruz:
   scores = laply(sentences, function(sentence, pos.words, neg.words) {
     
-    # cümleleri R'nin regex güdümlü global ikamesi, gsub() işleviyle temizleyelim
+    # cÃ¼mleleri R'nin regex gÃ¼dÃ¼mlÃ¼ global ikamesi, gsub() iÃ¾leviyle temizleyelim
     sentence = gsub('https://','',sentence)
     sentence = gsub('http://','',sentence)
     sentence = gsub('[^[:graph:]]', ' ',sentence)
@@ -160,24 +160,24 @@ score.sentiment = function(sentences, pos.words, neg.words, .progress='none')
     sentence = gsub('[[:cntrl:]]', '', sentence)
     sentence = gsub('\\d+', '', sentence)
     sentence = str_replace_all(sentence,"[^[:graph:]]", " ")
-    #ve küçük harfe dönüştürülmesi
+    #ve kÃ¼Ã§Ã¼k harfe dÃ¶nÃ¼Ã¾tÃ¼rÃ¼lmesi
     sentence = tolower(sentence)
     
-    # kelimelerin str_splint ile bölünmesi
+    # kelimelerin str_splint ile bÃ¶lÃ¼nmesi
     word.list = str_split(sentence, '\\s+')
     # sometimes a list() is one level of hierarchy too much
     words = unlist(word.list)
     
-    # kelimelerimizi pozitif ve negatif terimler sözlükleriyle karşılaştırlması
+    # kelimelerimizi pozitif ve negatif terimler sÃ¶zlÃ¼kleriyle karÃ¾Ã½laÃ¾tÃ½rlmasÃ½
     pos.matches = match(words, pos.words)
     neg.matches = match(words, neg.words)
     
     
-    # sadece DOĞRU/YANLIŞ çevirilmesi
+    # sadece DOÃRU/YANLIÃ Ã§evirilmesi
     pos.matches = !is.na(pos.matches)
     neg.matches = !is.na(neg.matches)
     
-    # DOĞRU/YANLIŞ 1 vevya 0 olarak değerlendirilecektir:
+    # DOÃRU/YANLIÃ 1 vevya 0 olarak deÃ°erlendirilecektir:
     score = sum(pos.matches) - sum(neg.matches)
     
     return(score)
@@ -187,7 +187,7 @@ score.sentiment = function(sentences, pos.words, neg.words, .progress='none')
   return(scores.df)
 }
 analysis <- score.sentiment(cleanText, pos.words, neg.words)
-# duyarlılık puanı frekans tablosu
+# duyarlÃ½lÃ½k puanÃ½ frekans tablosu
 table(analysis$score)
 
 analysis %>%
@@ -195,14 +195,14 @@ analysis %>%
   geom_histogram(binwidth = 1, fill = "lightblue")+ 
   ylab("Frekans") + 
   xlab("Duygu Skoru") +
-  ggtitle("Tweetlerin Duyarlılık Puanlarının Dağılımı") +
+  ggtitle("Tweetlerin DuyarlÃ½lÃ½k PuanlarÃ½nÃ½n DaÃ°Ã½lÃ½mÃ½") +
   ggeasy::easy_center_title()
 
 neutral <- length(which(analysis$score == 0))
 positive <- length(which(analysis$score > 0))
 negative <- length(which(analysis$score < 0))
 toplam=positive+neutral+negative
-Sentiment <- c("Pozitif","Nötr","Negatif")
+Sentiment <- c("Pozitif","NÃ¶tr","Negatif")
 
 Count <- c((positive/toplam)*100,(neutral/toplam)*100,(negative/toplam)*100)
 output <- data.frame(Sentiment,Count)
@@ -210,9 +210,9 @@ output$Sentiment<-factor(output$Sentiment,levels=Sentiment)
 ggplot(output, aes(x=Sentiment,y=Count,))+
 
   geom_bar(stat = "identity", aes(fill = Sentiment ))+
-  ggtitle("Duygu Analizine Göre Pozitif, Negatif ve Nötr Kelimelerin Yüzde Grafiği")
+  ggtitle("Duygu Analizine GÃ¶re Pozitif, Negatif ve NÃ¶tr Kelimelerin YÃ¼zde GrafiÃ°i")
 head((positive/toplam)*100,"Pozitif")
-head((neutral/toplam)*100 ,"Nötr")
+head((neutral/toplam)*100 ,"NÃ¶tr")
 head((negative/toplam)*100 ,"Negatif")
 
 
